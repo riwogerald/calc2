@@ -2,20 +2,24 @@ class PrecisionMode:
     STANDARD = 10  # 10 decimal places
     HIGH = 50      # 50 decimal places
     EXTREME = 100  # 100 decimal places
-    
+
     def __init__(self):
         self.current_mode = self.STANDARD
-        
+
     def set_mode(self, mode):
         if mode in [self.STANDARD, self.HIGH, self.EXTREME]:
             self.current_mode = mode
         else:
-            raise ValueError("Invalid precision mode")
-            
+            raise ValueError(f"Invalid precision mode. Choose from: STANDARD ({
+                             self.STANDARD}), HIGH ({self.HIGH}), or EXTREME ({self.EXTREME})")
+        self.current_mode = mode
+
     def get_precision(self):
         return self.current_mode
 
+
 PRECISION_MODE = PrecisionMode()  # Global precision mode instance
+
 
 class BigInteger:
     def __init__(self, value=0):
@@ -26,8 +30,9 @@ class BigInteger:
         - List of digits
         """
         self.sign = 1  # 1 for positive, -1 for negative
-        self.digits = []  # Store digits in reverse order (least significant first)
-        
+        # Store digits in reverse order (least significant first)
+        self.digits = []
+
         if isinstance(value, int):
             self._from_int(value)
         elif isinstance(value, str):
@@ -42,11 +47,11 @@ class BigInteger:
         if value < 0:
             self.sign = -1
             value = abs(value)
-        
+
         if value == 0:
             self.digits = [0]
             return
-            
+
         while value:
             self.digits.append(value % 10)
             value //= 10
@@ -57,10 +62,10 @@ class BigInteger:
         if value[0] == '-':
             self.sign = -1
             value = value[1:]
-        
+
         if not value.isdigit():
             raise ValueError("Invalid number string")
-            
+
         self.digits = [int(d) for d in reversed(value)]
 
     def __str__(self):
@@ -81,7 +86,7 @@ class BigInteger:
         """
         if len(self.digits) != len(other.digits):
             return 1 if len(self.digits) > len(other.digits) else -1
-        
+
         # Compare digits from most significant to least significant
         for i in range(len(self.digits) - 1, -1, -1):
             if self.digits[i] != other.digits[i]:
@@ -98,11 +103,11 @@ class BigInteger:
         """Less than operator"""
         if not isinstance(other, BigInteger):
             other = BigInteger(other)
-        
+
         # Different signs
         if self.sign != other.sign:
             return self.sign < other.sign
-        
+
         # Same signs
         comp = self._abs_compare(other)
         return comp < 0 if self.sign == 1 else comp > 0
@@ -155,23 +160,23 @@ class BigInteger:
         # Same signs, do regular addition
         result = BigInteger()
         result.sign = self.sign
-        
+
         carry = 0
         max_len = max(len(self.digits), len(other.digits))
-        
+
         result.digits = []
-        
+
         for i in range(max_len):
             d1 = self.digits[i] if i < len(self.digits) else 0
             d2 = other.digits[i] if i < len(other.digits) else 0
-            
+
             current = d1 + d2 + carry
             carry = current // 10
             result.digits.append(current % 10)
-        
+
         if carry:
             result.digits.append(carry)
-            
+
         result._remove_leading_zeros()
         return result
 
@@ -189,38 +194,84 @@ class BigInteger:
         # Same signs
         if self.sign == 1:
             if self < other:
-                result = other - self
+                result = other.__sub__(self)  # Use other's subtraction
                 result.sign = -1
                 return result
         else:
             temp1, temp2 = self.abs(), other.abs()
             if temp1 < temp2:
-                return temp2 - temp1
-            result = temp1 - temp2
+                return temp2.__sub__(temp1)
+            result = temp1.__sub__(temp2)
             result.sign = -1
             return result
 
         # At this point, we're subtracting a smaller number from a bigger positive number
         result = BigInteger()
         borrow = 0
-        
-        for i in range(len(self.digits)):
-            d1 = self.digits[i]
+
+        for i in range(max(len(self.digits), len(other.digits))):
+            d1 = self.digits[i] if i < len(self.digits) else 0
             d2 = other.digits[i] if i < len(other.digits) else 0
-            
-            # Handle borrow
+
             if borrow:
                 d1 -= 1
                 borrow = 0
-                
+
             if d1 < d2:
                 d1 += 10
                 borrow = 1
-                
+
             result.digits.append(d1 - d2)
-            
+
         result._remove_leading_zeros()
         return result
+
+    # def __sub__(self, other):
+    #     """Subtract two BigIntegers"""
+    #     if not isinstance(other, BigInteger):
+    #         other = BigInteger(other)
+
+    #     # If signs are different, add instead
+    #     if self.sign != other.sign:
+    #         temp = BigInteger(other.digits)
+    #         temp.sign = self.sign
+    #         return self + temp
+
+    #     # Same signs
+    #     if self.sign == 1:
+    #         if self < other:
+    #             result = other - self
+    #             result.sign = -1
+    #             return result
+    #     else:
+    #         temp1, temp2 = self.abs(), other.abs()
+    #         if temp1 < temp2:
+    #             return temp2 - temp1
+    #         result = temp1 - temp2
+    #         result.sign = -1
+    #         return result
+
+    #     # At this point, we're subtracting a smaller number from a bigger positive number
+    #     result = BigInteger()
+    #     borrow = 0
+
+    #     for i in range(len(self.digits)):
+    #         d1 = self.digits[i]
+    #         d2 = other.digits[i] if i < len(other.digits) else 0
+
+    #         # Handle borrow
+    #         if borrow:
+    #             d1 -= 1
+    #             borrow = 0
+
+    #         if d1 < d2:
+    #             d1 += 10
+    #             borrow = 1
+
+    #         result.digits.append(d1 - d2)
+
+    #     result._remove_leading_zeros()
+    #     return result
 
     def __mul__(self, other):
         """Multiply two BigIntegers"""
@@ -233,30 +284,30 @@ class BigInteger:
 
         # Calculate result sign
         result_sign = self.sign * other.sign
-        
+
         # Initialize result with zeros
         result = BigInteger(0)
-        
+
         # Perform multiplication digit by digit
         for i in range(len(self.digits)):
             # Skip if digit is 0
             if self.digits[i] == 0:
                 continue
-                
+
             # Initialize current step
             current = BigInteger()
             current.digits = [0] * i  # Add trailing zeros
-            
+
             carry = 0
             # Multiply current digit with all digits of other number
             for j in range(len(other.digits)):
                 product = self.digits[i] * other.digits[j] + carry
                 carry = product // 10
                 current.digits.append(product % 10)
-                
+
             if carry:
                 current.digits.append(carry)
-                
+
             result += current
 
         result.sign = result_sign
@@ -277,7 +328,7 @@ class BigInteger:
             return self
         if self.is_zero():
             return self
-            
+
         result = BigInteger(self.digits)
         result.sign = self.sign
         result.digits = [0] * n + result.digits
@@ -289,12 +340,12 @@ class BigInteger:
             return self
         if n >= len(self.digits):
             return BigInteger(0)
-            
+
         result = BigInteger(self.digits[n:])
         result.sign = self.sign
         result._remove_leading_zeros()
         return result
-        
+
     def __divmod__(self, other):
         """Implement division and modulo together"""
         if not isinstance(other, BigInteger):
@@ -329,7 +380,7 @@ class BigInteger:
 
         # Long division algorithm
         current = BigInteger(0)
-        
+
         for digit in temp:
             # Shift current left by 1 decimal place and add next digit
             current = current.shift_left(1)
@@ -346,7 +397,7 @@ class BigInteger:
             quotient.digits[0] = count
 
         remainder = current
-        
+
         # Apply signs
         quotient.sign = quotient_sign
         remainder.sign = remainder_sign
@@ -420,11 +471,13 @@ class BigInteger:
         try:
             # Handle decimal operations
             if '.' in expression:
+                expression = expression.replace(' ', '')
+
                 # Split the expression into operands and operator
                 parts = expression.replace(' ', '').split()
                 if len(parts) == 1:
                     return Decimal(expression)
-            
+
                 # Parse operator and operands
                 if '+' in expression:
                     a, b = expression.split('+')
@@ -446,26 +499,41 @@ class BigInteger:
                 elif '^' in expression:
                     a, b = expression.split('^')
                     return Decimal(a.strip()) ** Decimal(b.strip())
-                
+                # Handle single decimal number
+                if expression.count('.') == 1 and all(c in '0123456789.' for c in expression):
+                    return Decimal(expression)
+
             # Handle logarithms
             if expression.startswith('log'):
                 if '(' not in expression or ')' not in expression:
                     raise SyntaxError("Invalid logarithm format")
-            
+
                 # Extract base and argument
                 base_end = expression.find('(')
                 if base_end == 3:  # log(x) - natural log
                     base = None  # Natural log
                 else:
                     base = BigInteger(expression[3:base_end])
-            
+
                 arg = expression[base_end+1:-1]
                 num = BigInteger(arg)
-            
+
                 if base is None:
                     return num.ln()
                 return num.log(base)
-            
+
+            if expression.startswith('set_precision'):
+                mode = expression.split()[1].upper()
+                if mode == 'STANDARD':
+                    PRECISION_MODE.set_mode(PrecisionMode.STANDARD)
+                elif mode == 'HIGH':
+                    PRECISION_MODE.set_mode(PrecisionMode.HIGH)
+                elif mode == 'EXTREME':
+                    PRECISION_MODE.set_mode(PrecisionMode.EXTREME)
+                else:
+                    return "Invalid precision mode"
+                return f"Precision set to {mode}"
+
             # Existing evaluation logic for non-decimal operations
             if '!' in expression:
                 num = expression.replace('!', '')
@@ -490,47 +558,47 @@ class BigInteger:
                 return BigInteger(a) % BigInteger(b)
             else:
                 return BigInteger(expression)
-            
+
         except Exception as e:
             return f"Error: {str(e)}"
 
-    
     def ln(self):
         """Natural logarithm using series expansion"""
         if self.sign == -1 or self.is_zero():
             raise ValueError("Logarithm is undefined for non-positive numbers")
-        
+
         # For numbers close to 1, use series expansion
         # ln(x) = 2( z + z^3/3 + z^5/5 + ...) where z = (x-1)/(x+1)
         precision = PRECISION_MODE.get_precision()
-    
+
         # Convert to fraction for better precision
         x = Fraction(self)
         one = Fraction(1)
-    
+
         # Find power of 10 to scale number close to 1
         scale = 0
         while x > Fraction(10):
             x = x / 10
             scale += 1
-    
+
         # Calculate z = (x-1)/(x+1)
         z = (x - one) / (x + one)
         z_squared = z * z
-    
+
         # Initialize result
         result = Fraction(0)
         term = z
         n = 1
-    
+
         # Add terms until desired precision is reached
         while n <= precision:
             result = result + (term / n)
             term = term * z_squared
             n += 2
-        
+
         # Scale result back
-        return result * 2 + scale * Fraction(BigInteger("2302585092994046"), BigInteger("1000000000000000"))  # ln(10)
+        # ln(10)
+        return result * 2 + scale * Fraction(BigInteger("2302585092994046"), BigInteger("1000000000000000"))
 
     def log10(self):
         """Logarithm base 10"""
@@ -540,23 +608,25 @@ class BigInteger:
         """Logarithm with arbitrary base"""
         if not isinstance(base, BigInteger):
             base = BigInteger(base)
+        if base.is_zero() or base == BigInteger(1):
+            raise ValueError("Invalid logarithm base")
         return self.ln() / base.ln()
 
-        
+
 class Fraction:
     def __init__(self, numerator, denominator=BigInteger(1)):
         if not isinstance(numerator, BigInteger):
             numerator = BigInteger(numerator)
         if not isinstance(denominator, BigInteger):
             denominator = BigInteger(denominator)
-            
+
         if denominator.is_zero():
             raise ValueError("Denominator cannot be zero")
-            
+
         self.numerator = numerator
         self.denominator = denominator
         self._normalize()
-        
+
     def _normalize(self):
         """Normalize the fraction by:
         1. Moving sign to numerator
@@ -566,67 +636,83 @@ class Fraction:
         if self.denominator.sign == -1:
             self.numerator.sign *= -1
             self.denominator.sign = 1
-            
+
         # Reduce to lowest terms
         self._reduce()
-        
+
     def _reduce(self):
         """Reduce fraction to lowest terms using GCD"""
         def gcd(a, b):
             while not b.is_zero():
                 a, b = b, a % b
             return a
-            
+
         divisor = gcd(self.numerator.abs(), self.denominator)
         if divisor > BigInteger(1):
             self.numerator = self.numerator / divisor
             self.denominator = self.denominator / divisor
-            
+
     def __str__(self):
         if self.denominator == BigInteger(1):
             return str(self.numerator)
         return f"{self.numerator}/{self.denominator}"
-    
+
     def __add__(self, other):
         if not isinstance(other, Fraction):
             other = Fraction(other)
-    
-        new_num = (self.numerator * other.denominator) + (other.numerator * self.denominator)
+
+        new_num = (self.numerator * other.denominator) + \
+            (other.numerator * self.denominator)
         new_den = self.denominator * other.denominator
         return Fraction(new_num, new_den)
 
     def __sub__(self, other):
         if not isinstance(other, Fraction):
             other = Fraction(other)
-    
-        new_num = (self.numerator * other.denominator) - (other.numerator * self.denominator)
+
+        new_num = (self.numerator * other.denominator) - \
+            (other.numerator * self.denominator)
         new_den = self.denominator * other.denominator
         return Fraction(new_num, new_den)
 
     def __mul__(self, other):
         if not isinstance(other, Fraction):
             other = Fraction(other)
-    
-        return Fraction(self.numerator * other.numerator, 
-                    self.denominator * other.denominator)
+
+        return Fraction(self.numerator * other.numerator,
+                        self.denominator * other.denominator)
 
     def __truediv__(self, other):
         if not isinstance(other, Fraction):
             other = Fraction(other)
-    
+
         if other.numerator.is_zero():
             raise ZeroDivisionError("Division by zero")
-    
+
         return Fraction(self.numerator * other.denominator,
-                    self.denominator * other.numerator)
+                        self.denominator * other.numerator)
+
+    def __lt__(self, other):
+        if not isinstance(other, Fraction):
+            other = Fraction(other)
+        return (self.numerator * other.denominator) < (other.numerator * self.denominator)
+
+    def __gt__(self, other):
+        if not isinstance(other, Fraction):
+            other = Fraction(other)
+        return (self.numerator * other.denominator) > (other.numerator * self.denominator)
+
 
 class Decimal:
     def __init__(self, value, precision=None):
         if precision is None:
             precision = PRECISION_MODE.get_precision()
-            
+
         self.precision = precision
-        
+
+        if self.scale < 0:
+            raise ValueError("Scale cannot be negative")
+
         if isinstance(value, str):
             # Parse string representation
             parts = value.split('.')
@@ -643,34 +729,34 @@ class Decimal:
             self.from_float(value)
         else:
             raise ValueError("Invalid decimal input")
-            
+
     def from_float(self, value):
         """Convert float to Decimal"""
         str_val = f"{value:.{self.precision}f}"
         parts = str_val.split('.')
         self.value = BigInteger(parts[0] + parts[1])
         self.scale = len(parts[1])
-        
+
     def __str__(self):
         str_val = str(self.value)
         if self.scale == 0:
             return str_val
-        
+
         # Insert decimal point
         point_pos = len(str_val) - self.scale
         if point_pos <= 0:
             return "0." + "0" * (-point_pos) + str_val
         return str_val[:point_pos] + "." + str_val[point_pos:]
-    
+
     def __add__(self, other):
         if not isinstance(other, Decimal):
             other = Decimal(other)
-    
+
         # Align decimal points
         max_scale = max(self.scale, other.scale)
         a = self.value * BigInteger(10) ** (max_scale - self.scale)
         b = other.value * BigInteger(10) ** (max_scale - other.scale)
-    
+
         result = Decimal("0")
         result.value = a + b
         result.scale = max_scale
@@ -679,12 +765,12 @@ class Decimal:
     def __sub__(self, other):
         if not isinstance(other, Decimal):
             other = Decimal(other)
-    
+
         # Align decimal points
         max_scale = max(self.scale, other.scale)
         a = self.value * BigInteger(10) ** (max_scale - self.scale)
         b = other.value * BigInteger(10) ** (max_scale - other.scale)
-    
+
         result = Decimal("0")
         result.value = a - b
         result.scale = max_scale
@@ -693,7 +779,7 @@ class Decimal:
     def __mul__(self, other):
         if not isinstance(other, Decimal):
             other = Decimal(other)
-    
+
         result = Decimal("0")
         result.value = self.value * other.value
         result.scale = self.scale + other.scale
@@ -702,10 +788,10 @@ class Decimal:
     def __truediv__(self, other):
         if not isinstance(other, Decimal):
             other = Decimal(other)
-    
+
         if other.value.is_zero():
             raise ZeroDivisionError("Division by zero")
-    
+
         # Scale up for precision
         scale = PRECISION_MODE.get_precision()
         a = self.value * BigInteger(10) ** scale
@@ -717,15 +803,16 @@ class Decimal:
     def __pow__(self, other):
         if not isinstance(other, Decimal):
             other = Decimal(other)
-    
+
         # For now, only support integer exponents
         if other.scale != 0:
             raise ValueError("Only integer exponents are supported")
-    
+
         result = Decimal("1")
         for _ in range(int(str(other.value))):
             result *= self
         return result
+
 
 def show_help():
     """Display help menu with instructions and examples"""
@@ -734,32 +821,32 @@ def show_help():
     print("set_precision standard - Set standard precision (10 digits)")
     print("set_precision high    - Set high precision (50 digits)")
     print("set_precision extreme - Set extreme precision (100 digits)")
-    
+
     print("\nSupported Operations:")
     print("1. Addition (+)")
     print("   Example: 123456789 + 987654321")
     print("   Example: 999999999999999999 + 1")
-    
+
     print("\n2. Subtraction (-)")
     print("   Example: 1000000 - 999999")
     print("   Example: -5432 - 1234")
-    
+
     print("\n3. Multiplication (*)")
     print("   Example: 123456789 * 987654321")
     print("   Example: 2468 * 13579")
-    
+
     print("\n4. Division (/)")
     print("   Example: 1000 / 3")
     print("   Example: 987654321 / 123456789")
-    
+
     print("\n5. Modulo (%)")
     print("   Example: 1234567 % 890")
     print("   Example: 999999 % 7")
-    
+
     print("\n6. Exponentiation (^)")
     print("   Example: 2 ^ 64")
     print("   Example: 123 ^ 4")
-    
+
     print("\n7. Factorial (!)")
     print("   Example: 20!")
     print("   Example: 5!")
@@ -768,30 +855,32 @@ def show_help():
     print("   Natural log:  log(x)")
     print("   Base 10 log: log10(x)")
     print("   Custom base: logb(x) where b is the base")
-    
+
     print("\n9. Fractions")
     print("   Example: 1/2")
     print("   Example: 22/7")
-    
+
     print("\n10. Decimal Numbers")
     print("   Example: 3.14159")
     print("   Example: 2.718281828")
-    
+
     print("\nCommands:")
     print("help  - Show this help menu")
     print("clear - Clear the screen")
     print("quit  - Exit the calculator")
-    
+
     print("\nNotes:")
     print("- Enter one operation per line")
     print("- Spaces are optional")
     print("- Numbers can be arbitrarily large")
     print()
 
+
 def clear_screen():
     """Clear the terminal screen"""
     import os
     os.system('cls' if os.name == 'nt' else 'clear')
+
 
 def calculator_repl():
     """Interactive calculator REPL"""
@@ -806,18 +895,18 @@ def calculator_repl():
     while True:
         try:
             expression = input("\n> ").strip().lower()
-            
+
             if not expression:
                 continue
-                
+
             if expression == 'quit':
                 print("\nGoodbye!")
                 break
-                
+
             if expression == 'help':
                 show_help()
                 continue
-                
+
             if expression == 'clear':
                 clear_screen()
                 continue
@@ -834,13 +923,14 @@ def calculator_repl():
                 print("Error: Invalid expression format")
             except Exception as e:
                 print(f"Error: {str(e)}")
-                
+
         except KeyboardInterrupt:
             print("\nOperation cancelled.")
             continue
         except EOFError:
             print("\nGoodbye!")
             break
+
 
 def main():
     print("Starting calculator...")
@@ -851,6 +941,7 @@ def main():
     except Exception as e:
         print(f"Fatal error: {str(e)}")
         print("Calculator terminated.")
+
 
 if __name__ == "__main__":
     main()
