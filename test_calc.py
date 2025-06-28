@@ -88,9 +88,13 @@ def test_expression_evaluation():
         "20!",
         "log(100)",
         "ln(2)",
+        "sqrt(16)",
+        "abs(-42)",
         "3 + 5 * (2 - 8)",
         "1/2 + 3/4",
         "5 ^ 3!",
+        "(-5)!",  # This should raise an error
+        "0!",     # This should equal 1
     ]
 
     evaluator = Evaluator()
@@ -104,16 +108,59 @@ def test_expression_evaluation():
             result = evaluator.visit(ast)
             # For BigRational, display as fraction
             if isinstance(result, BigRational):
-                print(f"Result: {result.to_fraction_string()}\n")
+                if result.denominator == BigInteger('1'):
+                    print(f"Result: {result.numerator}")
+                else:
+                    print(f"Result: {result.to_fraction_string()} = {result.to_decimal(10)}")
             else:
-                print(f"Result: {result}\n")
+                print(f"Result: {result}")
         except Exception as e:
-            print(f"Error evaluating expression '{expr}': {e}\n")
+            print(f"Error: {e}")
+        print()
+
+def test_edge_cases():
+    print("=== Testing Edge Cases ===\n")
+    
+    evaluator = Evaluator()
+    
+    edge_cases = [
+        "0 + 0",
+        "0 * 1000000",
+        "1000000 / 1",
+        "1 / 3",
+        "2 / 3",
+        "22 / 7",  # Approximation of pi
+        "1 + 2 + 3 + 4 + 5",
+        "2 ^ 0",
+        "0 ^ 5",
+        "1 ^ 1000",
+        "(-1) ^ 2",
+        "(-1) ^ 3",
+    ]
+    
+    for expr in edge_cases:
+        print(f"Expression: {expr}")
+        try:
+            tokens = tokenize(expr)
+            parser = Parser(tokens)
+            ast = parser.parse()
+            result = evaluator.visit(ast)
+            if isinstance(result, BigRational):
+                if result.denominator == BigInteger('1'):
+                    print(f"Result: {result.numerator}")
+                else:
+                    print(f"Result: {result.to_fraction_string()} = {result.to_decimal(10)}")
+            else:
+                print(f"Result: {result}")
+        except Exception as e:
+            print(f"Error: {e}")
+        print()
 
 def main():
     test_big_integer_operations()
     test_big_rational_operations()
     test_expression_evaluation()
+    test_edge_cases()
 
 if __name__ == "__main__":
     main()
