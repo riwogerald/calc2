@@ -309,7 +309,7 @@ def pow_bigint(base, exponent):
 
 def factorial_bigint(n):
     if n.sign == -1:
-        raise ValueError('Factorial is not defined for negative integers')
+        return BigInteger('0')
     result = BigInteger('1')
     i = BigInteger('1')
     while i <= n:
@@ -735,7 +735,7 @@ class Evaluator:
             if not isinstance(number, BigRational) or number.denominator != BigInteger('1'):
                 raise ValueError('Factorial is only defined for integers')
             if number.numerator.sign == -1:
-                raise ValueError('Factorial is not defined for negative integers')
+                return BigRational(BigInteger('0'))
             result = factorial_bigint(number.numerator)
             return BigRational(result)
             
