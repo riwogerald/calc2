@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-xl;
+  }
+  
+  .button-primary {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl;
+  }
+  
+  .button-secondary {
+    @apply bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 font-medium px-6 py-3 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-md hover:shadow-lg;
+  }
+  
+  .calc-button {
+    @apply bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 font-mono font-medium h-12 rounded-lg transition-all duration-150 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md active:scale-95;
+  }
+  
+  .calc-button-operator {
+    @apply bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-mono font-medium h-12 rounded-lg transition-all duration-150 shadow-md hover:shadow-lg active:scale-95;
+  }
+  
+  .calc-button-equals {
+    @apply bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-mono font-bold h-12 rounded-lg transition-all duration-150 shadow-md hover:shadow-lg active:scale-95;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full hover:bg-gray-400;
+}
+
+/* Animation for result display */
+.result-animation {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Syntax highlighting for expressions */
+.expression-display {
+  @apply font-mono text-lg leading-relaxed;
+}
+
+.expression-display .number {
+  @apply text-blue-600;
+}
+
+.expression-display .operator {
+  @apply text-purple-600 font-bold;
+}
+
+.expression-display .function {
+  @apply text-green-600;
+}
+
+.expression-display .parenthesis {
+  @apply text-gray-600;
+}

@@ -4,6 +4,12 @@
 
 This Python script implements an **arbitrary-precision integer calculator** without relying on any external libraries or the language's native arbitrary-precision support. It includes its own classes for handling big integers and rational numbers, as well as a recursive descent parser and evaluator to process mathematical expressions entered by the user. The calculator supports a range of operations and functions and is wrapped in a **REPL (Read-Eval-Print Loop)** interface.
 
+## Original Problem Statement
+
+**Problem 2: Arbitrary precision integer calculator**
+
+Write an arbitrary-precision-integer calculator in a language that doesn't have native support and without relying on any libraries for the core functionality. Wrap it in a REPL. It should support at least addition, subtraction, multiplication, division (and modulo), exponentiation and factorial. Bonus points for supporting non-decimal bases, fractions, logarithms, etc.
+
 ## Features
 
 - **Arbitrary-Precision Integers**: Supports integers of any size limited only by available memory.
@@ -14,6 +20,36 @@ This Python script implements an **arbitrary-precision integer calculator** with
 - **Operator Precedence and Associativity**: Correctly parses expressions respecting mathematical operator precedence.
 - **Parentheses**: Supports grouping of expressions using parentheses `(` and `)`.
 - **REPL Interface**: Interactive command-line interface for entering and evaluating expressions.
+- **Web Interface**: Modern React-based web interface with calculator and test runner.
+
+## Web Interface
+
+The calculator now includes a modern web interface built with React and TypeScript:
+
+### Features:
+- **Homepage**: Overview of features and capabilities
+- **Calculator Interface**: Interactive calculator with visual keypad and history
+- **Test Runner**: Comprehensive test suite with real-time results
+- **Responsive Design**: Works on desktop and mobile devices
+- **Syntax Highlighting**: Color-coded mathematical expressions
+- **History Tracking**: Saves and displays calculation history
+- **Copy Results**: Easy copying of calculation results
+
+### Running the Web Interface:
+
+1. **Start the Python API server**:
+   ```bash
+   python server.py
+   ```
+
+2. **Start the web development server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Access the application**:
+   - Open your browser to `http://localhost:5173`
+   - The calculator API runs on `http://localhost:8000`
 
 ## Why This Approach Was Chosen
 
@@ -70,24 +106,63 @@ The main objective was to create a calculator that handles arbitrary-precision a
 
 ## How to Use
 
-1. **Run the Script**: python calc.py
+### Command Line Interface
+
+1. **Run the Script**: 
+   ```bash
+   python calc.py
+   ```
 
 2. **Enter Expressions**: Type mathematical expressions at the prompt. 
-    Examples:
-    Basic arithmetic: 12345678901234567890 + 98765432109876543210
-    Factorial: 20!
-    Exponentiation: 2 ^ 64
-    Fractions: 1/2 + 3/4
-    Logarithms: ln(2), log(100)
-    Exit: Type exit or quit to leave the calculator.
+   Examples:
+   - Basic arithmetic: `12345678901234567890 + 98765432109876543210`
+   - Factorial: `20!`
+   - Exponentiation: `2 ^ 64`
+   - Fractions: `1/2 + 3/4`
+   - Logarithms: `ln(2)`, `log(100)`
+   - Exit: Type `exit` or `quit` to leave the calculator.
+
+### Web Interface
+
+1. **Start the servers** (as described above)
+2. **Navigate** to the calculator page
+3. **Use the visual keypad** or type expressions directly
+4. **View history** of calculations
+5. **Run tests** to verify functionality
+
+## Testing
+
+The calculator includes comprehensive tests in `test_calc.py`:
+
+- **BigInteger Operations**: Tests for all arithmetic operations
+- **BigRational Operations**: Tests for fraction handling
+- **Expression Evaluation**: Tests for complex expressions
+- **Edge Cases**: Tests for boundary conditions and error handling
+
+Run tests via:
+- Command line: `python test_calc.py`
+- Web interface: Navigate to the Test page and click "Run All Tests"
 
 ## Limitations
 
-**Negative Exponents in BigInteger**: Exponents must be non-negative integers when using BigInteger.
-Floating-Point Numbers: Does not support floating-point numbers directly; uses BigRational for fractions.
-**Performance**: Operations on extremely large numbers may be slow due to the use of basic algorithms.
-**Logarithm Precision**: The ln and log functions use numerical approximation methods and may have limited precision.
+- **Negative Exponents in BigInteger**: Exponents must be non-negative integers when using BigInteger.
+- **Floating-Point Numbers**: Does not support floating-point numbers directly; uses BigRational for fractions.
+- **Performance**: Operations on extremely large numbers may be slow due to the use of basic algorithms.
+- **Logarithm Precision**: The ln and log functions use numerical approximation methods and may have limited precision.
+
+## Technology Stack
+
+### Backend
+- **Python 3**: Core calculator implementation
+- **HTTP Server**: Simple API server for web interface
+
+### Frontend
+- **React 18**: Modern UI framework
+- **TypeScript**: Type-safe JavaScript
+- **Tailwind CSS**: Utility-first CSS framework
+- **Vite**: Fast build tool and dev server
+- **React Router**: Client-side routing
 
 ## Conclusion
 
-By implementing the core functionality manually, this calculator provides an educational tool for understanding arbitrary-precision arithmetic, parsing, and expression evaluation in programming. It demonstrates how fundamental mathematical operations can be performed without the aid of built-in high-level functions or external libraries.
+By implementing the core functionality manually, this calculator provides an educational tool for understanding arbitrary-precision arithmetic, parsing, and expression evaluation in programming. It demonstrates how fundamental mathematical operations can be performed without the aid of built-in high-level functions or external libraries. The addition of a modern web interface makes the calculator more accessible and user-friendly while maintaining the educational value of the underlying implementation.
