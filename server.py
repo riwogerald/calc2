@@ -8,6 +8,8 @@ import threading
 import time
 import subprocess
 import os
+import io
+from contextlib import redirect_stdout, redirect_stderr
 
 # Import our calculator modules
 from calc import tokenize, Parser, Evaluator, BigRational, BigInteger
@@ -70,25 +72,72 @@ class CalculatorHandler(BaseHTTPRequestHandler):
 
     def handle_test(self):
         try:
-            # Capture the output of our test functions
-            import io
-            from contextlib import redirect_stdout
+            # Run individual test functions and capture their results
+            test_functions = [
+                ('BigInteger Operations', test_calc.test_big_integer_operations),
+                ('BigRational Operations', test_calc.test_big_rational_operations),
+                ('Expression Evaluation', test_calc.test_expression_evaluation),
+                ('Edge Cases', test_calc.test_edge_cases)
+            ]
             
-            output_buffer = io.StringIO()
+            test_results = []
             
-            with redirect_stdout(output_buffer):
-                # Run our test functions
-                test_calc.test_big_integer_operations()
-                test_calc.test_big_rational_operations()
-                test_calc.test_expression_evaluation()
-                test_calc.test_edge_cases()
+            for test_name, test_func in test_functions:
+                try:
+                    # Capture stdout and stderr for each test
+                    output_buffer = io.StringIO()
+                    error_buffer = io.StringIO()
+                    
+                    start_time = time.time()
+                    
+                    with redirect_stdout(output_buffer), redirect_stderr(error_buffer):
+                        test_func()
+                    
+                    end_time = time.time()
+                    duration = int((end_time - start_time) * 1000)  # Convert to milliseconds
+                    
+                    output = output_buffer.getvalue()
+                    error_output = error_buffer.getvalue()
+                    
+                    if error_output:
+                        test_results.append({
+                            'name': test_name,
+                            'status': 'failed',
+                            'duration': duration,
+                            'error': error_output,
+                            'output': output
+                        })
+                    else:
+                        test_results.append({
+                            'name': test_name,
+                            'status': 'passed',
+                            'duration': duration,
+                            'output': output
+                        })
+                        
+                except Exception as e:
+                    test_results.append({
+                        'name': test_name,
+                        'status': 'failed',
+                        'duration': 0,
+                        'error': str(e)
+                    })
             
-            output = output_buffer.getvalue()
+            # Calculate overall statistics
+            passed_count = sum(1 for result in test_results if result['status'] == 'passed')
+            failed_count = len(test_results) - passed_count
+            total_duration = sum(result['duration'] for result in test_results)
             
             self.send_json_response({
-                'status': 'success',
-                'output': output,
-                'message': 'All tests completed successfully'
+                'status': 'completed',
+                'results': test_results,
+                'summary': {
+                    'total': len(test_results),
+                    'passed': passed_count,
+                    'failed': failed_count,
+                    'duration': total_duration
+                },
+                'message': f'Tests completed: {passed_count} passed, {failed_count} failed'
             })
             
         except Exception as e:
@@ -115,7 +164,7 @@ def run_server(port=8000):
     server_address = ('', port)
     httpd = HTTPServer(server_address, CalculatorHandler)
     print(f"Calculator API server running on port {port}")
-    print(f"Access the calculator at http://localhost:3000")
+    print(f"Access the calculator at http://localhost:5173")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
