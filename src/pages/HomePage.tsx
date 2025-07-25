@@ -41,12 +41,12 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-indigo-600/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-teal-600/10"></div>
         <div className="relative max-w-7xl mx-auto text-center">
           <div className="animate-fade-in">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
               Arbitrary-Precision
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-teal-600">
                 Calculator
               </span>
             </h1>
@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
                 className="glass-effect p-6 rounded-xl hover:shadow-2xl transition-all duration-300 animate-slide-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <feature.icon className="h-12 w-12 text-blue-600 mb-4" />
+                <feature.icon className="h-12 w-12 text-purple-600 mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
                 <p className="text-gray-600">{feature.description}</p>
               </div>
@@ -95,7 +95,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Operations Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+      <section className="py-20 px-4 bg-gradient-to-r from-purple-50 to-teal-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -109,7 +109,7 @@ const HomePage: React.FC = () => {
                     key={index}
                     className="flex items-center space-x-3 p-3 bg-white/60 rounded-lg"
                   >
-                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
                     <span className="text-gray-700 font-mono text-sm">{operation}</span>
                   </div>
                 ))}
@@ -120,19 +120,19 @@ const HomePage: React.FC = () => {
               <h3 className="text-2xl font-semibold text-gray-900 mb-6">Example Calculations</h3>
               <div className="space-y-4 font-mono text-sm">
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-blue-600 mb-1">Input:</div>
+                  <div className="text-purple-600 mb-1">Input:</div>
                   <div className="text-gray-800">123456789012345678901234567890 * 987654321098765432109876543210</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-blue-600 mb-1">Input:</div>
+                  <div className="text-purple-600 mb-1">Input:</div>
                   <div className="text-gray-800">20!</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-blue-600 mb-1">Input:</div>
+                  <div className="text-purple-600 mb-1">Input:</div>
                   <div className="text-gray-800">2^64</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-blue-600 mb-1">Input:</div>
+                  <div className="text-purple-600 mb-1">Input:</div>
                   <div className="text-gray-800">1/2 + 3/4</div>
                 </div>
               </div>
