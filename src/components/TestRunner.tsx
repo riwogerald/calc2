@@ -13,7 +13,7 @@ const TestRunner: React.FC<TestRunnerProps> = ({ tests, isRunning }) => {
       case 'pending':
         return <Clock className="h-5 w-5 text-gray-400" />
       case 'running':
-        return <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
+        return <Loader2 className="h-5 w-5 text-purple-600 animate-spin" />
       case 'passed':
         return <CheckCircle className="h-5 w-5 text-green-600" />
       case 'failed':
@@ -26,7 +26,7 @@ const TestRunner: React.FC<TestRunnerProps> = ({ tests, isRunning }) => {
       case 'pending':
         return 'text-gray-600 bg-gray-50'
       case 'running':
-        return 'text-blue-700 bg-blue-50 animate-pulse-soft'
+        return 'text-purple-700 bg-purple-50 animate-pulse-soft'
       case 'passed':
         return 'text-green-700 bg-green-50'
       case 'failed':
