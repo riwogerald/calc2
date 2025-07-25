@@ -3,6 +3,7 @@ import { Calculator, History, Trash2, Copy, Check } from 'lucide-react'
 import CalculatorDisplay from '../components/CalculatorDisplay'
 import CalculatorKeypad from '../components/CalculatorKeypad'
 import HistoryPanel from '../components/HistoryPanel'
+import { mockApi } from '../services/mockApi'
 
 export interface HistoryEntry {
   id: string
@@ -24,19 +25,27 @@ const CalculatorPage: React.FC = () => {
 
     setIsCalculating(true)
     try {
-      const response = await fetch('http://localhost:8000/calculate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ expression: expr }),
-      })
+      let data
+      try {
+        // Try real backend first
+        const response = await fetch('http://localhost:8000/calculate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ expression: expr }),
+        })
 
-      if (!response.ok) {
-        throw new Error('Calculation failed')
+        if (!response.ok) {
+          throw new Error('Backend not available')
+        }
+
+        data = await response.json()
+      } catch (backendError) {
+        // Fallback to mock API for demo
+        data = await mockApi.calculate(expr)
       }
-
-      const data = await response.json()
+      
       const resultValue = data.result || data.error || 'Error'
       
       setResult(resultValue)
