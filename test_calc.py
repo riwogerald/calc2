@@ -95,6 +95,15 @@ def test_expression_evaluation():
         "5 ^ 3!",
         "(-5)!",  # This should raise an error
         "0!",     # This should equal 1
+        "100!",   # Large factorial
+        "2 ^ 100", # Large power
+        "sqrt(2)", # Irrational square root
+        "1000000000000000000000000000000 + 1", # Very large numbers
+        "999999999999999999999999999999 * 999999999999999999999999999999", # Large multiplication
+        "ln(10) / ln(2)", # Logarithm base conversion
+        "(1 + 2) * (3 + 4)", # Complex parentheses
+        "2 ^ (3 ^ 2)", # Nested exponentiation
+        "abs(sqrt(16) - 4)", # Nested functions
     ]
 
     evaluator = Evaluator()
