@@ -1,12 +1,10 @@
-# Arbitrary-Precision Integer Calculator (`calc.py`)
+# Arbitrary-Precision Integer Calculator
 
 ## Overview
 
 This Python script implements an **arbitrary-precision integer calculator** without relying on any external libraries or the language's native arbitrary-precision support. It includes its own classes for handling big integers and rational numbers, as well as a recursive descent parser and evaluator to process mathematical expressions entered by the user. The calculator supports a range of operations and functions and is wrapped in a **REPL (Read-Eval-Print Loop)** interface.
 
 ## Original Problem Statement
-
-**Problem 2: Arbitrary precision integer calculator**
 
 Write an arbitrary-precision-integer calculator in a language that doesn't have native support and without relying on any libraries for the core functionality. Wrap it in a REPL. It should support at least addition, subtraction, multiplication, division (and modulo), exponentiation and factorial. Bonus points for supporting non-decimal bases, fractions, logarithms, etc.
 
