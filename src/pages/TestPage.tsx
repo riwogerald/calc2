@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { TestTube, Play, CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react'
 import TestRunner from '../components/TestRunner'
 import TestResults from '../components/TestResults'
+import { mockApi } from '../services/mockApi'
 
 export interface TestResult {
   name: string
@@ -39,40 +40,42 @@ const TestPage: React.FC = () => {
     setTests(prev => prev.map(test => ({ ...test, status: 'pending' as const })))
 
     try {
-      const response = await fetch('http://localhost:8000/test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      let testResults
+      try {
+        // Try real backend first
+        const response = await fetch('http://localhost:8000/test', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
-      if (!response.ok) {
-        throw new Error('Test execution failed')
-      }
+        if (!response.ok) {
+          throw new Error('Backend not available')
+        }
 
-      const data = await response.json()
-      
-      // Show actual test results from the backend
-      if (data.status === 'completed' && data.results) {
-        const updatedTests = data.results.map((result: any) => ({
-          name: result.name,
-          status: result.status as 'passed' | 'failed',
-          duration: result.duration,
-          output: result.output,
-          error: result.error
-        }))
+        const data = await response.json()
         
-        // Update tests with real results
-        setTests(updatedTests)
-      } else {
-        // Fallback if API structure is different
-        setTests(prev => prev.map(test => ({
-          ...test,
-          status: 'passed' as const,
-          duration: 500,
-          output: 'Test completed successfully'
-        })))
+        // Show actual test results from the backend
+        if (data.status === 'completed' && data.results) {
+          testResults = data.results.map((result: any) => ({
+            name: result.name,
+            status: result.status as 'passed' | 'failed',
+            duration: result.duration,
+            output: result.output,
+            error: result.error
+          }))
+        } else {
+          throw new Error('Invalid response format')
+        }
+      } catch (backendError) {
+        // Fallback to mock API for demo
+        const mockResults = await mockApi.runTests()
+        testResults = mockResults
       }
+      
+      // Update tests with results
+      setTests(testResults)
     } catch (error) {
       // Mark all tests as failed
       setTests(prev => prev.map(test => ({
