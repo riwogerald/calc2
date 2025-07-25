@@ -13,6 +13,14 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelect, visible 
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
 
+  const formatExpression = (expr: string) => {
+    // Simple syntax highlighting using CSS classes defined in index.css
+    return expr.replace(/(\d+)/g, '<span class="number">$1</span>')
+              .replace(/([+\-*/^%!])/g, '<span class="operator">$1</span>')
+              .replace(/(ln|log|sqrt|abs)/g, '<span class="function">$1</span>')
+              .replace(/([()])/g, '<span class="parenthesis">$1</span>')
+  }
+
   const copyToClipboard = async (text: string, event: React.MouseEvent) => {
     event.stopPropagation()
     try {
@@ -54,11 +62,12 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelect, visible 
                 </button>
               </div>
               
-              <div className="font-mono text-sm mb-1 text-gray-700 break-all">
-                {entry.expression}
-              </div>
+              <div 
+                className="expression-display font-mono text-sm mb-1 text-gray-700 break-all"
+                dangerouslySetInnerHTML={{ __html: formatExpression(entry.expression) }}
+              />
               
-              <div className="font-mono text-sm font-medium text-blue-600 break-all">
+              <div className="font-mono text-sm font-medium text-purple-600 break-all">
                 = {entry.result}
               </div>
             </div>
