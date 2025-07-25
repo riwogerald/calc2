@@ -31,9 +31,11 @@ The calculator now includes a modern web interface built with React and TypeScri
 - **Calculator Interface**: Interactive calculator with visual keypad and history
 - **Test Runner**: Comprehensive test suite with real-time results
 - **Responsive Design**: Works on desktop and mobile devices
-- **Syntax Highlighting**: Color-coded mathematical expressions
+- **Syntax Highlighting**: Color-coded mathematical expressions with purple/teal theme
 - **History Tracking**: Saves and displays calculation history
 - **Copy Results**: Easy copying of calculation results
+- **Smart Fallback**: Automatically uses mock API when backend is unavailable (demo deployment)
+- **Progressive Enhancement**: Works offline with client-side calculations for basic operations
 
 ### Running the Web Interface:
 
@@ -50,6 +52,7 @@ The calculator now includes a modern web interface built with React and TypeScri
 3. **Access the application**:
    - Open your browser to `http://localhost:5173`
    - The calculator API runs on `http://localhost:8000`
+   - **Live Demo**: [https://apicalculator-v2.netlify.app/calculator](https://apicalculator-v2.netlify.app/calculator)
 
 ## Why This Approach Was Chosen
 
@@ -150,18 +153,41 @@ Run tests via:
 - **Performance**: Operations on extremely large numbers may be slow due to the use of basic algorithms.
 - **Logarithm Precision**: The ln and log functions use numerical approximation methods and may have limited precision.
 
+## Deployment
+
+### Live Demo
+The calculator is deployed and accessible at:
+**[https://apicalculator-v2.netlify.app/calculator](https://apicalculator-v2.netlify.app/calculator)**
+
+### Deployment Architecture
+- **Frontend**: Deployed on Netlify with static hosting
+- **Backend**: Uses intelligent fallback system
+  - Attempts to connect to full Python backend when available (local development)
+  - Automatically falls back to client-side mock API for demo deployment
+  - Supports all basic operations: +, -, *, /, ^, !, sqrt(), ln(), log()
+  - Maintains full functionality in both modes
+
+### Mock API Features
+- Simulates backend responses for demonstration
+- Supports all calculator operations with JavaScript implementations
+- Includes realistic test suite execution
+- Provides network delay simulation for authentic feel
+- Seamless user experience regardless of backend availability
+
 ## Technology Stack
 
 ### Backend
 - **Python 3**: Core calculator implementation
 - **HTTP Server**: Simple API server for web interface
+- **Mock API**: TypeScript/JavaScript fallback for demo deployment
 
 ### Frontend
 - **React 18**: Modern UI framework
 - **TypeScript**: Type-safe JavaScript
-- **Tailwind CSS**: Utility-first CSS framework
+- **Tailwind CSS**: Utility-first CSS framework with purple/teal theme
 - **Vite**: Fast build tool and dev server
 - **React Router**: Client-side routing
+- **Lucide React**: Modern icon library
 
 ## Conclusion
 
