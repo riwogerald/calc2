@@ -24,7 +24,7 @@ const CalculatorPage: React.FC = () => {
 
     setIsCalculating(true)
     try {
-      const response = await fetch('/api/calculate', {
+      const response = await fetch('http://localhost:8000/calculate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ const CalculatorPage: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">
-            <Calculator className="h-10 w-10 text-blue-600" />
+            <Calculator className="h-10 w-10 text-purple-600" />
             Arbitrary-Precision Calculator
           </h1>
           <p className="text-gray-600">
@@ -125,7 +125,7 @@ const CalculatorPage: React.FC = () => {
             <div className="glass-effect rounded-2xl p-6 shadow-2xl h-full">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                  <History className="h-5 w-5 text-blue-600" />
+                  <History className="h-5 w-5 text-purple-600" />
                   History
                 </h3>
                 <div className="flex gap-2">
