@@ -38,18 +38,18 @@ const TestResults: React.FC<TestResultsProps> = ({ tests }) => {
 
       {/* Success Rate */}
       {completedTests > 0 && (
-        <div className="bg-blue-50 p-4 rounded-lg">
+        <div className="bg-purple-50 p-4 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="h-5 w-5 text-blue-600" />
-            <span className="font-medium text-blue-700">Success Rate</span>
+            <TrendingUp className="h-5 w-5 text-purple-600" />
+            <span className="font-medium text-purple-700">Success Rate</span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="text-2xl font-bold text-blue-800">
+            <div className="text-2xl font-bold text-purple-800">
               {successRate.toFixed(1)}%
             </div>
-            <div className="flex-1 bg-blue-200 rounded-full h-2">
+            <div className="flex-1 bg-purple-200 rounded-full h-2">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                className="bg-purple-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${successRate}%` }}
               />
             </div>
