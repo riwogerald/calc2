@@ -17,11 +17,11 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
   copied
 }) => {
   const formatExpression = (expr: string) => {
-    // Simple syntax highlighting
-    return expr.replace(/(\d+)/g, '<span class="text-blue-600">$1</span>')
-              .replace(/([+\-*/^%!])/g, '<span class="text-purple-600 font-bold">$1</span>')
-              .replace(/(ln|log|sqrt|abs)/g, '<span class="text-green-600">$1</span>')
-              .replace(/([()])/g, '<span class="text-gray-600">$1</span>')
+    // Simple syntax highlighting using CSS classes defined in index.css
+    return expr.replace(/(\d+)/g, '<span class="number">$1</span>')
+              .replace(/([+\-*/^%!])/g, '<span class="operator">$1</span>')
+              .replace(/(ln|log|sqrt|abs)/g, '<span class="function">$1</span>')
+              .replace(/([()])/g, '<span class="parenthesis">$1</span>')
   }
 
   return (
@@ -43,10 +43,10 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
       </div>
 
       {/* Result Display */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 min-h-[80px] flex items-center justify-between">
+      <div className="bg-gradient-to-r from-purple-50 to-teal-50 rounded-lg p-4 min-h-[80px] flex items-center justify-between">
         <div className="flex-1">
           {isCalculating ? (
-            <div className="flex items-center justify-center text-blue-600">
+            <div className="flex items-center justify-center text-purple-600">
               <Loader2 className="h-6 w-6 animate-spin mr-2" />
               <span className="font-medium">Calculating...</span>
             </div>
