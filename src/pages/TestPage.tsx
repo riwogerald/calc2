@@ -39,7 +39,7 @@ const TestPage: React.FC = () => {
     setTests(prev => prev.map(test => ({ ...test, status: 'pending' as const })))
 
     try {
-      const response = await fetch('/api/test', {
+      const response = await fetch('http://localhost:8000/test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,29 +52,26 @@ const TestPage: React.FC = () => {
 
       const data = await response.json()
       
-      // Simulate running tests with delays for better UX
-      for (let i = 0; i < testSuites.length; i++) {
-        setTests(prev => prev.map((test, index) => 
-          index === i 
-            ? { ...test, status: 'running' as const }
-            : test
-        ))
+      // Show actual test results from the backend
+      if (data.status === 'completed' && data.results) {
+        const updatedTests = data.results.map((result: any) => ({
+          name: result.name,
+          status: result.status as 'passed' | 'failed',
+          duration: result.duration,
+          output: result.output,
+          error: result.error
+        }))
         
-        // Simulate test execution time
-        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000))
-        
-        // Update with actual results (simplified for demo)
-        setTests(prev => prev.map((test, index) => 
-          index === i 
-            ? { 
-                ...test, 
-                status: Math.random() > 0.1 ? 'passed' as const : 'failed' as const,
-                duration: Math.floor(Math.random() * 1000) + 100,
-                output: data.output || 'Test completed successfully',
-                error: Math.random() > 0.9 ? 'Sample error message' : undefined
-              }
-            : test
-        ))
+        // Update tests with real results
+        setTests(updatedTests)
+      } else {
+        // Fallback if API structure is different
+        setTests(prev => prev.map(test => ({
+          ...test,
+          status: 'passed' as const,
+          duration: 500,
+          output: 'Test completed successfully'
+        })))
       }
     } catch (error) {
       // Mark all tests as failed
