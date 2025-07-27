@@ -8,6 +8,10 @@ This Python script implements an **arbitrary-precision integer calculator** with
 
 Write an arbitrary-precision-integer calculator in a language that doesn't have native support and without relying on any libraries for the core functionality. Wrap it in a REPL. It should support at least addition, subtraction, multiplication, division (and modulo), exponentiation and factorial. Bonus points for supporting non-decimal bases, fractions, logarithms, etc.
 
+Here's what the dashboard looks like:
+![Main dashboard for the API Calculator.](screenshots/dashboard.png)
+🌐 **Live Demo**: https://apicalculator-v2.netlify.app/
+
 ## Features
 
 - **Arbitrary-Precision Integers**: Supports integers of any size limited only by available memory.
@@ -87,6 +91,10 @@ The main objective was to create a calculator that handles arbitrary-precision a
 - **Simplification**: Reduces fractions to their simplest form by dividing numerator and denominator by their greatest common divisor (GCD).
 - **Decimal Conversion**: Converts fractions to decimal representation, handling repeating decimals.
 
+Here's how the calculator interface looks:
+![API Calculator.](screenshots/calc.png)
+![API Calculator.](screenshots/calc2.png)
+
 ### Arithmetic Functions
 
 - **String-Based Computations**: All arithmetic is performed using strings to represent numbers, allowing for arbitrary precision.
@@ -143,6 +151,12 @@ The calculator includes comprehensive tests in `test_calc.py`:
 Run tests via:
 - Command line: `python test_calc.py`
 - Web interface: Navigate to the Test page and click "Run All Tests"
+
+Test Interface:
+![Test Cases for the API Calculator.](screenshots/tests1.png)
+
+Test Results:
+![Test Results for the API Calculator.](screenshots/tests2.png)
 
 ## Limitations
 
