@@ -92,7 +92,7 @@ The main objective was to create a calculator that handles arbitrary-precision a
 - **Decimal Conversion**: Converts fractions to decimal representation, handling repeating decimals.
 
 Here's how the calculator interface looks:
-![API Calculator.](screenshots/calc.png)
+![API Calculator.](screenshots/calc1.png)
 ![API Calculator.](screenshots/calc2.png)
 
 ### Arithmetic Functions
