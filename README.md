@@ -2,205 +2,283 @@
 
 ## Overview
 
-This Python script implements an **arbitrary-precision integer calculator** without relying on any external libraries or the language's native arbitrary-precision support. It includes its own classes for handling big integers and rational numbers, as well as a recursive descent parser and evaluator to process mathematical expressions entered by the user. The calculator supports a range of operations and functions and is wrapped in a **REPL (Read-Eval-Print Loop)** interface.
+This project implements a **comprehensive arbitrary-precision integer calculator** with both command-line and modern web interfaces. The calculator is built from scratch without relying on external libraries for core mathematical operations, featuring its own classes for handling big integers and rational numbers, along with a recursive descent parser and evaluator. The project includes a **React-based web interface**, **comprehensive test suite**, and **deployment-ready configuration**.
 
-## Original Problem Statement
+## 🌐 Live Demo
 
-Write an arbitrary-precision-integer calculator in a language that doesn't have native support and without relying on any libraries for the core functionality. Wrap it in a REPL. It should support at least addition, subtraction, multiplication, division (and modulo), exponentiation and factorial. Bonus points for supporting non-decimal bases, fractions, logarithms, etc.
-
-Here's what the dashboard looks like:
-![Main dashboard for the API Calculator.](screenshots/dashboard.png)
-🌐 **Live Demo**: https://apicalculator-v2.netlify.app/
+**[https://apicalculator-v2.netlify.app/](https://apicalculator-v2.netlify.app/)**
 
 ## Features
 
-- **Arbitrary-Precision Integers**: Supports integers of any size limited only by available memory.
-- **Basic Arithmetic Operations**: Addition (`+`), subtraction (`-`), multiplication (`*`), division (`/`), modulo (`%`), and exponentiation (`^`).
-- **Factorial Operator**: Computes factorials using the `!` operator.
-- **Fractions Support**: Handles rational numbers through a custom `BigRational` class.
-- **Logarithmic Functions**: Supports natural logarithm (`ln()`) and common logarithm (`log()`).
-- **Operator Precedence and Associativity**: Correctly parses expressions respecting mathematical operator precedence.
-- **Parentheses**: Supports grouping of expressions using parentheses `(` and `)`.
-- **REPL Interface**: Interactive command-line interface for entering and evaluating expressions.
-- **Web Interface**: Modern React-based web interface with calculator and test runner.
-
-## Web Interface
-
-The calculator now includes a modern web interface built with React and TypeScript:
-
-### Features:
-- **Homepage**: Overview of features and capabilities
-- **Calculator Interface**: Interactive calculator with visual keypad and history
-- **Test Runner**: Comprehensive test suite with real-time results
-- **Responsive Design**: Works on desktop and mobile devices
-- **Syntax Highlighting**: Color-coded mathematical expressions with purple/teal theme
-- **History Tracking**: Saves and displays calculation history
-- **Copy Results**: Easy copying of calculation results
-- **Smart Fallback**: Automatically uses mock API when backend is unavailable (demo deployment)
-- **Progressive Enhancement**: Works offline with client-side calculations for basic operations
-
-### Running the Web Interface:
-
-1. **Start the Python API server**:
-   ```bash
-   python server.py
-   ```
-
-2. **Start the web development server**:
-   ```bash
-   npm run dev
-   ```
-
-3. **Access the application**:
-   - Open your browser to `http://localhost:5173`
-   - The calculator API runs on `http://localhost:8000`
-   - **Live Demo**: [https://apicalculator-v2.netlify.app/calculator](https://apicalculator-v2.netlify.app/calculator)
-
-## Why This Approach Was Chosen
-
-The main objective was to create a calculator that handles arbitrary-precision arithmetic **without relying on external libraries** or the language's built-in arbitrary-precision features. This requires implementing fundamental arithmetic operations manually, which provides greater control over the computations and deepens understanding of how these operations work at a low level.
-
-### Key Reasons:
-
-1. **Educational Value**: Building the calculator from scratch demonstrates proficiency in fundamental programming principles and algorithms for big number arithmetic.
-2. **No External Dependencies**: By avoiding external libraries, the calculator remains self-contained and portable.
-3. **Customization and Extendibility**: Implementing core functionality allows for easier addition of new features, such as fractions and logarithmic functions, tailored to specific requirements.
-
-## Implementation Details
-
-### BigInteger Class
-
-- **Representation**: Stores the number as a string of digits and a sign indicator (`1` for positive, `-1` for negative).
-- **Initialization**: Parses string inputs to handle arbitrarily large numbers and signs.
-- **Arithmetic Operations**:
-  - **Addition and Subtraction**: Implements digit-wise addition and subtraction with proper handling of signs and carries/borrows.
-  - **Multiplication**: Uses a digit-wise multiplication algorithm similar to the traditional manual method.
-  - **Division and Modulo**: Performs long division, returning both quotient and remainder.
-  - **Exponentiation**: Implements power function using exponentiation by squaring.
-  - **Factorial**: Calculates factorial using iterative multiplication.
-- **Comparison Operators**: Overloads comparison operators (`==`, `!=`, `<`, `<=`, `>`, `>=`) for comparing `BigInteger` instances.
-- **Utilities**: Provides methods for absolute value and negation.
-
-### BigRational Class
-
-- **Representation**: Consists of a numerator and a denominator, both of which are `BigInteger` instances.
-- **Arithmetic Operations**:
-  - **Addition and Subtraction**: Uses common denominators to add or subtract fractions.
-  - **Multiplication and Division**: Multiplies or divides numerators and denominators respectively.
-  - **Exponentiation**: Raises numerator and denominator to the given power.
-- **Simplification**: Reduces fractions to their simplest form by dividing numerator and denominator by their greatest common divisor (GCD).
-- **Decimal Conversion**: Converts fractions to decimal representation, handling repeating decimals.
-
-Here's how the calculator interface looks:
-![API Calculator.](screenshots/calc1.png)
-![API Calculator.](screenshots/calc2.png)
-
-### Arithmetic Functions
-
-- **String-Based Computations**: All arithmetic is performed using strings to represent numbers, allowing for arbitrary precision.
-- **Supporting Functions**: Includes helper functions like `compare_strings`, `add_strings`, `subtract_strings`, etc., to manipulate numerical strings.
-
-### Parsing and Evaluation
-
-- **Lexer (Tokenizer)**: Converts input strings into a sequence of tokens representing numbers, operators, parentheses, and functions.
-- **Parser**: Implements a recursive descent parser that constructs an Abstract Syntax Tree (AST) from the tokens.
-- **Evaluator**: Traverses the AST to compute the result of the expression, performing operations as defined in the AST nodes.
-- **Function Handling**: Supports functions like `ln` and `log` by mapping function calls in the AST to corresponding evaluator methods.
-
-### REPL Interface
-
-- **Interactive Loop**: Reads expressions from the user, evaluates them, and prints the results.
-- **Command Handling**: Recognizes `exit` or `quit` commands to terminate the program.
-- **Error Handling**: Catches and displays errors without crashing, allowing the user to continue using the calculator.
-
-## How to Use
-
-### Command Line Interface
-
-1. **Run the Script**: 
-   ```bash
-   python calc.py
-   ```
-
-2. **Enter Expressions**: Type mathematical expressions at the prompt. 
-   Examples:
-   - Basic arithmetic: `12345678901234567890 + 98765432109876543210`
-   - Factorial: `20!`
-   - Exponentiation: `2 ^ 64`
-   - Fractions: `1/2 + 3/4`
-   - Logarithms: `ln(2)`, `log(100)`
-   - Exit: Type `exit` or `quit` to leave the calculator.
+### Core Mathematical Capabilities
+- **Arbitrary-Precision Integers**: Supports integers of any size limited only by available memory
+- **Basic Arithmetic Operations**: Addition (`+`), subtraction (`-`), multiplication (`*`), division (`/`), modulo (`%`), and exponentiation (`^`)
+- **Factorial Operator**: Computes factorials using the `!` operator
+- **Fractions Support**: Handles rational numbers through a custom `BigRational` class with automatic simplification
+- **Advanced Functions**: Natural logarithm (`ln()`), common logarithm (`log()`), square root (`sqrt()`), absolute value (`abs()`)
+- **Operator Precedence and Associativity**: Correctly parses expressions respecting mathematical operator precedence
+- **Parentheses Support**: Full support for grouping expressions using parentheses
 
 ### Web Interface
+- **Modern React Frontend**: Built with React 18, TypeScript, and Tailwind CSS
+- **Interactive Calculator**: Visual keypad with syntax highlighting and real-time expression formatting
+- **Calculation History**: Persistent history with timestamps and easy result copying
+- **Responsive Design**: Optimized for desktop and mobile devices
+- **Purple/Teal Theme**: Professional color scheme with glass morphism effects
+- **Syntax Highlighting**: Color-coded mathematical expressions for better readability
 
-1. **Start the servers** (as described above)
-2. **Navigate** to the calculator page
-3. **Use the visual keypad** or type expressions directly
-4. **View history** of calculations
-5. **Run tests** to verify functionality
+### Testing & Quality Assurance
+- **Comprehensive Test Suite**: Covers BigInteger operations, BigRational operations, expression evaluation, and edge cases
+- **Web-Based Test Runner**: Interactive test execution with real-time results and performance metrics
+- **Automated Testing**: Both command-line and web-based test execution
+- **Performance Monitoring**: Test duration tracking and success rate analytics
 
-## Testing
-
-The calculator includes comprehensive tests in `test_calc.py`:
-
-- **BigInteger Operations**: Tests for all arithmetic operations
-- **BigRational Operations**: Tests for fraction handling
-- **Expression Evaluation**: Tests for complex expressions
-- **Edge Cases**: Tests for boundary conditions and error handling
-
-Run tests via:
-- Command line: `python test_calc.py`
-- Web interface: Navigate to the Test page and click "Run All Tests"
-
-Test Interface:
-![Test Cases for the API Calculator.](screenshots/tests1.png)
-
-Test Results:
-![Test Results for the API Calculator.](screenshots/tests2.png)
-
-## Limitations
-
-- **Negative Exponents in BigInteger**: Exponents must be non-negative integers when using BigInteger.
-- **Floating-Point Numbers**: Does not support floating-point numbers directly; uses BigRational for fractions.
-- **Performance**: Operations on extremely large numbers may be slow due to the use of basic algorithms.
-- **Logarithm Precision**: The ln and log functions use numerical approximation methods and may have limited precision.
-
-## Deployment
-
-### Live Demo
-The calculator is deployed and accessible at:
-**[https://apicalculator-v2.netlify.app/calculator](https://apicalculator-v2.netlify.app/calculator)**
-
-### Deployment Architecture
-- **Frontend**: Deployed on Netlify with static hosting
-- **Backend**: Uses intelligent fallback system
-  - Attempts to connect to full Python backend when available (local development)
-  - Automatically falls back to client-side mock API for demo deployment
-  - Supports all basic operations: +, -, *, /, ^, !, sqrt(), ln(), log()
-  - Maintains full functionality in both modes
-
-### Mock API Features
-- Simulates backend responses for demonstration
-- Supports all calculator operations with JavaScript implementations
-- Includes realistic test suite execution
-- Provides network delay simulation for authentic feel
-- Seamless user experience regardless of backend availability
+### Deployment & Architecture
+- **Dual Backend Support**: Python HTTP server for full functionality, JavaScript fallback for demo deployment
+- **Smart Fallback System**: Automatically switches to client-side calculations when backend is unavailable
+- **Netlify Deployment**: Production-ready deployment configuration with build optimization
+- **Progressive Enhancement**: Full functionality maintained regardless of backend availability
 
 ## Technology Stack
 
 ### Backend
-- **Python 3**: Core calculator implementation
-- **HTTP Server**: Simple API server for web interface
-- **Mock API**: TypeScript/JavaScript fallback for demo deployment
+- **Python 3**: Core calculator implementation with custom BigInteger and BigRational classes
+- **HTTP Server**: RESTful API server for calculator operations and test execution
+- **Zero Dependencies**: Pure Python implementation without external mathematical libraries
 
 ### Frontend
-- **React 18**: Modern UI framework
-- **TypeScript**: Type-safe JavaScript
-- **Tailwind CSS**: Utility-first CSS framework with purple/teal theme
-- **Vite**: Fast build tool and dev server
-- **React Router**: Client-side routing
+- **React 18**: Modern component-based UI framework
+- **TypeScript**: Type-safe JavaScript with full type coverage
+- **Tailwind CSS**: Utility-first CSS framework with custom design system
+- **Vite**: Fast build tool and development server
+- **React Router**: Client-side routing for multi-page application
 - **Lucide React**: Modern icon library
 
-## Conclusion
+### Development & Deployment
+- **Concurrently**: Simultaneous frontend and backend development
+- **Netlify**: Static site hosting with automatic deployments
+- **ESLint**: Code quality and consistency enforcement
+- **PostCSS & Autoprefixer**: CSS processing and browser compatibility
 
-By implementing the core functionality manually, this calculator provides an educational tool for understanding arbitrary-precision arithmetic, parsing, and expression evaluation in programming. It demonstrates how fundamental mathematical operations can be performed without the aid of built-in high-level functions or external libraries. The addition of a modern web interface makes the calculator more accessible and user-friendly while maintaining the educational value of the underlying implementation.
+## Project Structure
+
+```
+├── calc.py                 # Core calculator implementation
+├── server.py              # Python HTTP API server
+├── test_calc.py           # Comprehensive test suite
+├── src/
+│   ├── components/        # React components
+│   │   ├── CalculatorDisplay.tsx
+│   │   ├── CalculatorKeypad.tsx
+│   │   ├── HistoryPanel.tsx
+│   │   ├── Navigation.tsx
+│   │   ├── TestRunner.tsx
+│   │   └── TestResults.tsx
+│   ├── pages/            # Application pages
+│   │   ├── HomePage.tsx
+│   │   ├── CalculatorPage.tsx
+│   │   └── TestPage.tsx
+│   ├── services/         # API and mock services
+│   │   └── mockApi.ts
+│   └── App.tsx           # Main application component
+├── dist/                 # Production build output
+├── screenshots/          # Documentation images
+└── docs/                # Additional documentation
+```
+
+## Installation & Setup
+
+### Prerequisites
+- **Node.js 18+** and **npm 9+**
+- **Python 3.8+**
+
+### Development Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd calculator-app
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Start development servers**:
+   ```bash
+   npm run dev
+   ```
+   This starts both the Python backend (port 8000) and React frontend (port 5173)
+
+4. **Access the application**:
+   - Web Interface: `http://localhost:5173`
+   - API Server: `http://localhost:8000`
+
+### Production Build
+
+```bash
+npm run build
+```
+
+## Usage
+
+### Web Interface
+
+1. **Calculator Page**: Interactive calculator with visual keypad
+   - Enter expressions using the keypad or keyboard
+   - View real-time syntax highlighting
+   - Access calculation history
+   - Copy results with one click
+
+2. **Test Page**: Comprehensive test suite execution
+   - Run all tests with detailed results
+   - View performance metrics
+   - Monitor test coverage
+
+3. **Home Page**: Feature overview and navigation
+
+### Command Line Interface
+
+```bash
+python calc.py
+```
+
+**Example calculations**:
+```
+> 123456789012345678901234567890 * 987654321098765432109876543210
+> 20!
+> 2^64
+> 1/2 + 3/4
+> ln(2)
+> sqrt(16)
+```
+
+### API Endpoints
+
+- **POST /calculate**: Evaluate mathematical expressions
+- **POST /test**: Execute test suite and return results
+
+## Implementation Details
+
+### BigInteger Class
+- **String-based representation** for unlimited precision
+- **Optimized algorithms** for all arithmetic operations
+- **Sign handling** and **comparison operators**
+- **Exponentiation by squaring** for efficient power calculations
+
+### BigRational Class
+- **Automatic fraction simplification** using GCD
+- **Decimal conversion** with repeating decimal detection
+- **Mixed arithmetic** with integers and rationals
+- **Precision preservation** throughout calculations
+
+### Parser & Evaluator
+- **Recursive descent parser** with proper operator precedence
+- **Abstract Syntax Tree (AST)** construction and evaluation
+- **Function call support** with parameter validation
+- **Error handling** with descriptive messages
+
+### Web Architecture
+- **Component-based design** with clear separation of concerns
+- **State management** using React hooks
+- **API abstraction** with automatic fallback
+- **Responsive layout** with mobile-first approach
+
+## Testing
+
+### Test Coverage
+- **BigInteger Operations**: All arithmetic operations and edge cases
+- **BigRational Operations**: Fraction handling and simplification
+- **Expression Evaluation**: Complex expressions and function calls
+- **Edge Cases**: Zero operations, negative numbers, large numbers
+
+### Running Tests
+
+**Command Line**:
+```bash
+python test_calc.py
+```
+
+**Web Interface**:
+Navigate to `/test` and click "Run All Tests"
+
+## Deployment
+
+### Live Deployment
+The application is deployed at: **[https://apicalculator-v2.netlify.app/](https://apicalculator-v2.netlify.app/)**
+
+### Deployment Features
+- **Automatic fallback** to client-side calculations
+- **Full functionality** maintained in demo mode
+- **Progressive enhancement** for optimal user experience
+- **Static site optimization** for fast loading
+
+### Manual Deployment
+
+1. **Build the project**:
+   ```bash
+   npm run build:frontend
+   ```
+
+2. **Deploy to Netlify**:
+   - Connect repository to Netlify
+   - Set build command: `npm run build:frontend`
+   - Set publish directory: `dist`
+
+## Screenshots
+
+### Calculator Interface
+![Calculator Interface](screenshots/calc1.png)
+*Interactive calculator with syntax highlighting and history*
+
+![Calculator Results](screenshots/calc2.png)
+*Complex calculations with fraction and decimal results*
+
+### Test Suite
+![Test Execution](screenshots/tests1.png)
+*Comprehensive test suite with real-time execution*
+
+![Test Results](screenshots/tests2.png)
+*Detailed test results with performance metrics*
+
+### Dashboard
+![Main Dashboard](screenshots/dashboard.png)
+*Modern homepage with feature overview*
+
+## Performance Characteristics
+
+- **Memory Efficient**: String-based number representation
+- **Scalable**: Handles arbitrarily large numbers
+- **Fast Operations**: Optimized algorithms for common operations
+- **Responsive UI**: Smooth interactions with 60fps animations
+
+## Browser Compatibility
+
+- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- **Mobile Support**: iOS Safari, Chrome Mobile, Samsung Internet
+- **Progressive Enhancement**: Graceful degradation for older browsers
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built as a demonstration of fundamental computer science algorithms
+- Implements arbitrary-precision arithmetic without external dependencies
+- Showcases modern web development practices with React and TypeScript
+- Provides educational value for understanding mathematical computation
+
+---
+
+**Note**: This calculator demonstrates the implementation of arbitrary-precision arithmetic from first principles, making it an excellent educational tool for understanding how mathematical operations work at a fundamental level while providing a production-ready web application.
