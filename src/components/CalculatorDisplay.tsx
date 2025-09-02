@@ -17,11 +17,96 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
   copied
 }) => {
   const formatExpression = (expr: string) => {
-    // Simple syntax highlighting using CSS classes defined in index.css
-    return expr.replace(/(\d+)/g, '<span class="number">$1</span>')
-              .replace(/([+\-*/^%!])/g, '<span class="operator">$1</span>')
-              .replace(/(ln|log|sqrt|abs)/g, '<span class="function">$1</span>')
-              .replace(/([()])/g, '<span class="parenthesis">$1</span>')
+    if (!expr) return []
+    
+    // Split the expression into tokens and classify them
+    const tokens: { text: string; type: 'number' | 'operator' | 'function' | 'parenthesis' | 'text' }[] = []
+    let currentToken = ''
+    let i = 0
+    
+    while (i < expr.length) {
+      const char = expr[i]
+      
+      // Check for functions (ln, log, sqrt, abs)
+      if (i <= expr.length - 2) {
+        const twoChar = expr.substr(i, 2)
+        const threeChar = expr.substr(i, 3)
+        const fourChar = expr.substr(i, 4)
+        
+        if (fourChar === 'sqrt') {
+          if (currentToken) {
+            tokens.push({ text: currentToken, type: 'text' })
+            currentToken = ''
+          }
+          tokens.push({ text: 'sqrt', type: 'function' })
+          i += 4
+          continue
+        } else if (threeChar === 'abs' || threeChar === 'log') {
+          if (currentToken) {
+            tokens.push({ text: currentToken, type: 'text' })
+            currentToken = ''
+          }
+          tokens.push({ text: threeChar, type: 'function' })
+          i += 3
+          continue
+        } else if (twoChar === 'ln') {
+          if (currentToken) {
+            tokens.push({ text: currentToken, type: 'text' })
+            currentToken = ''
+          }
+          tokens.push({ text: 'ln', type: 'function' })
+          i += 2
+          continue
+        }
+      }
+      
+      // Check for numbers
+      if (/\d/.test(char) || (char === '.' && /\d/.test(currentToken))) {
+        currentToken += char
+      } else {
+        // End of number token
+        if (currentToken && /^\d*\.?\d+$/.test(currentToken)) {
+          tokens.push({ text: currentToken, type: 'number' })
+          currentToken = ''
+        } else if (currentToken) {
+          tokens.push({ text: currentToken, type: 'text' })
+          currentToken = ''
+        }
+        
+        // Check for operators and parentheses
+        if (/[+\-*/^%!]/.test(char)) {
+          tokens.push({ text: char, type: 'operator' })
+        } else if (/[()]/.test(char)) {
+          tokens.push({ text: char, type: 'parenthesis' })
+        } else {
+          currentToken += char
+        }
+      }
+      i++
+    }
+    
+    // Don't forget the last token
+    if (currentToken) {
+      if (/^\d*\.?\d+$/.test(currentToken)) {
+        tokens.push({ text: currentToken, type: 'number' })
+      } else {
+        tokens.push({ text: currentToken, type: 'text' })
+      }
+    }
+    
+    return tokens
+  }
+  
+  const renderFormattedExpression = (expr: string) => {
+    const tokens = formatExpression(expr)
+    return tokens.map((token, index) => {
+      const className = token.type === 'text' ? '' : token.type
+      return (
+        <span key={index} className={className}>
+          {token.text}
+        </span>
+      )
+    })
   }
 
   return (
@@ -30,10 +115,9 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
       <div className="bg-gray-50 rounded-lg p-4 mb-4 min-h-[60px] flex items-center">
         <div className="flex-1">
           {expression ? (
-            <div 
-              className="expression-display text-right"
-              dangerouslySetInnerHTML={{ __html: formatExpression(expression) }}
-            />
+            <div className="expression-display text-right">
+              {renderFormattedExpression(expression)}
+            </div>
           ) : (
             <div className="text-gray-400 text-right font-mono text-lg">
               Enter an expression...
