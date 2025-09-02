@@ -259,6 +259,44 @@ The application is deployed at: **[https://apicalculator-v2.netlify.app/](https:
 - **Mobile Support**: iOS Safari, Chrome Mobile, Samsung Internet
 - **Progressive Enhancement**: Graceful degradation for older browsers
 
+## Future Enhancements
+
+The following features are planned for future releases, aligned with the bonus points in the original problem statement:
+
+### 🔢 Non-Decimal Base Support (High Priority)
+- **Binary operations**: Convert to/from base 2, perform calculations in binary
+- **Octal support**: Base 8 number system with full arithmetic operations
+- **Hexadecimal support**: Base 16 with A-F digit support
+- **Custom bases**: Support for bases 2-36 with automatic conversion
+- **Base conversion**: Easy switching between number systems
+- **Example**: `0b1010 + 0o12 = 0x16` (10 + 10 = 22 in different bases)
+
+### 📊 Enhanced Fraction Support
+- **Mixed number display**: `2 3/4` instead of `11/4`
+- **Fraction simplification options**: Choose automatic or manual simplification
+- **Decimal to fraction conversion**: Convert repeating decimals back to fractions
+- **Continued fraction representation**: Advanced mathematical notation
+
+### 📈 Extended Mathematical Functions
+- **Logarithms with custom base**: `log(100, 10) = 2`
+- **Trigonometric functions**: `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`
+- **Hyperbolic functions**: `sinh()`, `cosh()`, `tanh()`
+- **Mathematical constants**: `π`, `e`, `φ` (golden ratio)
+
+### 🧮 Advanced Calculator Features
+- **Memory functions**: `M+`, `M-`, `MR`, `MC`, `MS`
+- **Variable storage**: `x = 5`, `y = x * 2`, `solve y`
+- **Unit conversion**: Length, weight, temperature, etc.
+- **Statistical functions**: Mean, median, standard deviation
+
+### 💾 Enhanced User Experience
+- **Export/Import**: Save calculations to file, import calculation sets
+- **Keyboard shortcuts**: Full keyboard navigation and shortcuts
+- **Expression graphing**: Plot mathematical functions (where applicable)
+- **Scientific notation**: `1.23e+10` display format
+
+**Priority Order**: Non-decimal bases → Enhanced fractions → Extended functions → Advanced features → UX improvements
+
 ## Contributing
 
 1. Fork the repository
